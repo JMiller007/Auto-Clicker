@@ -55,7 +55,6 @@ An AI-powered auto-clicker that interprets user instructions and performs action
 
 ## File Structure
 
-\```markdown
 auto-clicker/
 │
 ├── src/
@@ -67,7 +66,6 @@ auto-clicker/
 │
 ├── requirements.txt
 └── README.md
-\```
 
 ## Contributing
 

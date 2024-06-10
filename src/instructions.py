@@ -50,12 +50,7 @@ def find_phrase_position(phrase, boxes):
 def interpret_instruction(instruction, image):
     boxes = extract_text_with_positions(image)
     
-    if "click on" in instruction.lower():
-        phrase = instruction.lower().replace("click on", "").strip()
-        x, y = find_phrase_position(phrase, boxes)
-        if x is not None and y is not None:
-            return ("click", x, y)
-    elif "double click on" in instruction.lower():
+    if "double click on" in instruction.lower():
         phrase = instruction.lower().replace("double click on", "").strip()
         x, y = find_phrase_position(phrase, boxes)
         if x is not None and y is not None:
@@ -65,6 +60,11 @@ def interpret_instruction(instruction, image):
         x, y = find_phrase_position(phrase, boxes)
         if x is not None and y is not None:
             return ("right_click", x, y)
+    elif "click on" in instruction.lower():
+        phrase = instruction.lower().replace("click on", "").strip()
+        x, y = find_phrase_position(phrase, boxes)
+        if x is not None and y is not None:
+            return ("click", x, y)
     
     return None
 

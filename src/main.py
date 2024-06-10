@@ -5,19 +5,40 @@ import numpy as np
 import cv2
 import tkinter as tk
 from tkinter import messagebox
+import win32gui
+import win32con
+import time
+
+def minimize_window(hwnd):
+    win32gui.ShowWindow(hwnd, win32con.SW_MINIMIZE)
+
+def restore_window(hwnd):
+    win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
 
 def main(instruction):
-    # Capture the screen
-    screenshot = capture_screen()
-    screenshot_np = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
     
-    # Interpret the instruction
-    action_details = interpret_instruction(instruction, screenshot_np)
-    if action_details:
-        action, x, y = action_details
-        perform_action(action, x, y)
-    else:
-        print("No action found for the given instruction.")
+    start_time = time.time()
+    hwnd = win32gui.GetForegroundWindow()
+    minimize_window(hwnd)
+
+    try:
+        # Capture the screen
+        screenshot = capture_screen()
+        screenshot_np = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+        
+        # Interpret the instruction
+        action_details = interpret_instruction(instruction, screenshot_np)
+        if action_details:
+            action, x, y = action_details
+            perform_action(action, x, y)
+        else:
+            print("No action found for the given instruction.")
+    finally:
+        restore_window(hwnd)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Execution time: {elapsed_time:.2f} seconds")
+
 
 def on_submit():
     instruction = entry.get()

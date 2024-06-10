@@ -3,3 +3,6 @@ tensorflow
 pyautogui
 pytesseract
 numpy
+pywin32
+Pillow
+tkinter

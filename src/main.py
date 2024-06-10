@@ -16,7 +16,6 @@ def restore_window(hwnd):
     win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
 
 def main(instruction):
-    
     start_time = time.time()
     hwnd = win32gui.GetForegroundWindow()
     minimize_window(hwnd)
@@ -27,18 +26,15 @@ def main(instruction):
         screenshot_np = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
         
         # Interpret the instruction
-        action_details = interpret_instruction(instruction, screenshot_np)
-        if action_details:
+        action_details_list = interpret_instruction(instruction, screenshot_np)
+        for action_details in action_details_list:
             action, x, y = action_details
             perform_action(action, x, y)
-        else:
-            print("No action found for the given instruction.")
     finally:
         restore_window(hwnd)
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Execution time: {elapsed_time:.2f} seconds")
-
 
 def on_submit():
     instruction = entry.get()
@@ -61,5 +57,5 @@ if __name__ == "__main__":
     app.mainloop()
 
     # Example user instruction (for testing without GUI)
-    # user_instruction = "click on File Understanding Assistance"
+    # user_instruction = "click on File Understanding Assistance then click on Add Team workspace"
     # main(user_instruction)

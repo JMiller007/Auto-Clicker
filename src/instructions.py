@@ -22,7 +22,7 @@ def extract_text_with_positions(image):
             boxes.append((data['text'][i], x, y, w, h))
     
     # Print extracted text and their positions for debugging
-    for (text, x, y, w, h) in boxes:
+    for i, (text, x, y, w, h) in enumerate(boxes):
         print(f"Detected text: '{text}' at position: ({x}, {y}, {w}, {h}) with confidence: {data['conf'][i]}")
     
     return boxes
@@ -49,24 +49,27 @@ def find_phrase_position(phrase, boxes):
 # Function to interpret the instruction and find the corresponding action
 def interpret_instruction(instruction, image):
     boxes = extract_text_with_positions(image)
+    actions = []
+    instruction_parts = instruction.lower().split(" then ")
     
-    if "double click on" in instruction.lower():
-        phrase = instruction.lower().replace("double click on", "").strip()
-        x, y = find_phrase_position(phrase, boxes)
-        if x is not None and y is not None:
-            return ("double_click", x, y)
-    elif "right click on" in instruction.lower():
-        phrase = instruction.lower().replace("right click on", "").strip()
-        x, y = find_phrase_position(phrase, boxes)
-        if x is not None and y is not None:
-            return ("right_click", x, y)
-    elif "click on" in instruction.lower():
-        phrase = instruction.lower().replace("click on", "").strip()
-        x, y = find_phrase_position(phrase, boxes)
-        if x is not None and y is not None:
-            return ("click", x, y)
+    for part in instruction_parts:
+        if "double click on" in part:
+            phrase = part.replace("double click on", "").strip()
+            x, y = find_phrase_position(phrase, boxes)
+            if x is not None and y is not None:
+                actions.append(("double_click", x, y))
+        elif "right click on" in part:
+            phrase = part.replace("right click on", "").strip()
+            x, y = find_phrase_position(phrase, boxes)
+            if x is not None and y is not None:
+                actions.append(("right_click", x, y))
+        elif "click on" in part:
+            phrase = part.replace("click on", "").strip()
+            x, y = find_phrase_position(phrase, boxes)
+            if x is not None and y is not None:
+                actions.append(("click", x, y))
     
-    return None
+    return actions
 
 # Example usage (for testing purposes)
 if __name__ == "__main__":
@@ -74,12 +77,10 @@ if __name__ == "__main__":
     screen_image = cv2.imread('screen_sample.png')
 
     # User instruction
-    user_instruction = "click on Add Team workspace"
+    user_instruction = "click on Add Team workspace then click on Meaningful GitHub Projects"
 
     # Interpret the instruction
-    action = interpret_instruction(user_instruction, screen_image)
+    actions = interpret_instruction(user_instruction, screen_image)
 
-    if action:
+    for action in actions:
         print(f"Action: {action[0]}, Coordinates: ({action[1]}, {action[2]})")
-    else:
-        print("No action found for the given instruction.")

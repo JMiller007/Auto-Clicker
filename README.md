@@ -53,20 +53,6 @@ An AI-powered auto-clicker that interprets user instructions and performs action
 - `Double click on Submit`
 - `Right click on Options`
 
-## File Structure
-
-auto-clicker/
-│
-├── src/
-│ ├── **init**.py
-│ ├── main.py
-│ ├── capture.py
-│ ├── instructions.py
-│ └── actions.py
-│
-├── requirements.txt
-└── README.md
-
 ## Contributing
 
 Contributions are welcome
